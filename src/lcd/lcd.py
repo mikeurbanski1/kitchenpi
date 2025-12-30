@@ -1,3 +1,5 @@
+from time import sleep
+
 import board  # type: ignore
 from digitalio import DigitalInOut  # type: ignore
 from adafruit_character_lcd.character_lcd import Character_LCD_Mono  # type: ignore
@@ -61,6 +63,8 @@ class LCD:
         for idx, (symbol, bitmap) in enumerate(_CUSTOM_CHARS.items()):
             logger.debug(f'Adding custom char: {idx} {symbol} {bitmap}')
             self.lcd.create_char(idx, bitmap)
+            sleep(0.05)
+        sleep(0.05)
 
     def set_text(self, text: str):
         self.lcd.message = _translate_text(text)

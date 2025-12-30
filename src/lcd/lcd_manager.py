@@ -1,4 +1,5 @@
 import threading
+from time import sleep
 from typing import TypedDict
 from src.lcd import get_lcd_class
 from src.types import RotatingPart
@@ -14,8 +15,11 @@ class LcdManager:
     def __init__(self, is_dev: bool) -> None:
         self.is_dev = is_dev
         LCD, PINS = get_lcd_class(is_dev)
-        self.lcds = [
-            LCD(
+
+        self.lcds = [];
+        num_screens = len(PINS['en']);
+        for index, en_pin in enumerate(PINS['en']):
+            lcd = LCD(
                 en=en_pin,
                 width=16,
                 height=2,
@@ -25,8 +29,10 @@ class LcdManager:
                 d6=PINS['d6'],
                 d7=PINS['d7'],
             )
-            for en_pin in PINS['en']
-        ]
+            if index < num_screens - 1:
+                sleep(0.1)
+
+            self.lcds.append(lcd)
 
         self.rotating_display_threads: dict[int, RotatingDisplayThread] = {}
 
